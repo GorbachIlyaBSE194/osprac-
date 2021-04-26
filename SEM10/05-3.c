@@ -53,7 +53,7 @@ int main()
     int parent[2], result;
     size_t size = 0;
     key_t key;
-    char pathname[] = "task1_fixed.c";
+    char pathname[] = "05-3.c";
     struct sembuf buffer;
 
     int semid;
@@ -61,16 +61,16 @@ int main()
 
     // Создаём Pipes родителя и ребёнка:
     if (pipe(parent) < 0) {
-        printf("Невозможно создать pipe\n\r");
+        printf("Cant create pipe\n\r");
         exit(-1);
     }
 
     if ((key = ftok(pathname, 0)) < 0) {
-        printf("Ключ не сгенерирован.\n");
+        printf("Cant create key.\n");
         exit(-1);
     }
 
-    // Создаём семафорчик
+    // Создаём семафор
     if ((semid = semget(key, 1, 0666|IPC_CREAT|IPC_EXCL)) < 0) {
         if (errno != EEXIST) {
         printf("Can\'t create semaphore set\n");
@@ -115,7 +115,7 @@ int main()
             }
 
             // Пишем сообщение ребёнку.
-            size = write(parent[1], "Privet sinok!", 14);
+            size = write(parent[1], "Hello world!", 14);
             
             if (size != 14) {
                 printf("Can\'t write all string to pipe\n");
@@ -141,7 +141,7 @@ int main()
             printf("Сообщение №%d. Ребенок читает сообщение:%s\n", ++counter, resstring);
 
             // Пишем сообщение отцу
-            size = write(parent[1], "Privet otec", 14);
+            size = write(parent[1], "Hello papa", 14);
             if (size != 14) {
                 printf("Can\'t write all string to pipe: %d\n", size);
                 exit(-1);
